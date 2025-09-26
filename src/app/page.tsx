@@ -38,11 +38,11 @@ export default function Home() {
   const handleSaveNote = (noteData: Omit<Note, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => {
     if (!user) return;
 
-    const note: Omit<Note, 'id'> = {
+    const newNote: Note = {
       ...noteData,
       userId: user.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
 
     notesStorage.saveNote(note);

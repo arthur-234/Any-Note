@@ -81,8 +81,8 @@ export function TasksView({}: TasksViewProps) {
       completed: false,
       userId: user.id,
       linkedNoteId: newTask.linkedNoteId || undefined,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
 
     tasksStorage.saveTask(task);
