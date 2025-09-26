@@ -136,15 +136,15 @@ export default function Home() {
   // Main application layout
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex">
+      <div className="flex min-h-screen">
         <Sidebar
           currentView={currentView}
           onViewChange={setCurrentView}
           onNewNote={handleNewNote}
         />
         
-        <main className="flex-1 lg:ml-[240px]">
-          <div className="p-2 pl-4">
+        <main className="flex-1 lg:ml-[240px] flex flex-col">
+          <div className="p-2 pl-4 flex-1">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentView}

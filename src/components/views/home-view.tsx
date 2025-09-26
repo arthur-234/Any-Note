@@ -60,7 +60,7 @@ export function HomeView({ onViewChange, onNewNote }: HomeViewProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full flex flex-col">
       {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -80,7 +80,7 @@ export function HomeView({ onViewChange, onNewNote }: HomeViewProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-shrink-0"
       >
         <Card className="backdrop-blur-sm bg-background/95 border-border/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -131,15 +131,16 @@ export function HomeView({ onViewChange, onNewNote }: HomeViewProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
+        className="flex-1 flex flex-col"
       >
-        <Card className="backdrop-blur-sm bg-background/95 border-border/50">
+        <Card className="backdrop-blur-sm bg-background/95 border-border/50 flex-1 flex flex-col">
           <CardHeader>
             <CardTitle>Ações Rápidas</CardTitle>
             <CardDescription>
               Acesse rapidamente as funcionalidades principais
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex items-center">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
