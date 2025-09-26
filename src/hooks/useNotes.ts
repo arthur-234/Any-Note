@@ -16,7 +16,7 @@ export function useNotes(): NotesState & NotesActions {
     const savedNotes = localStorage.getItem(STORAGE_KEYS.NOTES);
     if (savedNotes) {
       try {
-        const parsedNotes = JSON.parse(savedNotes).map((note: any) => ({
+        const parsedNotes = JSON.parse(savedNotes).map((note: Omit<Note, 'createdAt' | 'updatedAt'> & { createdAt: string; updatedAt: string }) => ({
           ...note,
           createdAt: new Date(note.createdAt),
           updatedAt: new Date(note.updatedAt),

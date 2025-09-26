@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Save, Palette, Tag, Pin, Plus } from 'lucide-react';
+import { X, Save, Palette, Tag, Plus } from 'lucide-react';
 import {
   Dialog,
   DialogContent,

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Search } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { NoteCard } from './note-card';
 import { NoteModal } from './note-modal';
 import { Note } from '@/types/note';
@@ -83,7 +83,6 @@ export function NotesList({
             <NoteCard
               key={note.id}
               note={note}
-              onEdit={onEditNote}
               onDelete={onDeleteNote}
               onTogglePin={onTogglePin}
               onView={handleViewNote}

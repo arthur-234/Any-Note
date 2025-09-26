@@ -13,13 +13,12 @@ import { getContrastTextClasses } from '@/utils/color-contrast';
 
 interface NoteCardProps {
   note: Note;
-  onEdit: (note: Note) => void;
   onDelete: (id: string) => void;
   onTogglePin: (id: string) => void;
   onView?: (note: Note) => void;
 }
 
-export function NoteCard({ note, onEdit, onDelete, onTogglePin, onView }: NoteCardProps) {
+export function NoteCard({ note, onDelete, onTogglePin, onView }: NoteCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const formatDate = (date: Date) => {

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Pin, Calendar, Edit, Tag, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Note } from '@/types';
+import { Note } from '@/types/note';
 import { NOTE_COLORS } from '@/constants';
 import { getContrastTextClasses } from '@/utils/color-contrast';
 import { cn } from '@/lib/utils';

@@ -132,7 +132,7 @@ export function NotesFilters({
                 {SORT_OPTIONS.map((option) => (
                   <DropdownMenuItem
                     key={option.value}
-                    onClick={() => onSortChange(option.value as any)}
+                    onClick={() => onSortChange(option.value as 'createdAt' | 'updatedAt' | 'title')}
                     className="cursor-pointer"
                   >
                     <div className="flex items-center justify-between w-full">
