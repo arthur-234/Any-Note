@@ -218,7 +218,7 @@ export function Sidebar({ currentView, onViewChange, onNewNote, className }: Sid
       {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: isCollapsed ? 64 : 280 }}
+        animate={{ width: isCollapsed ? 64 : 240 }}
         className={cn(
           "hidden lg:flex flex-col bg-background/95 backdrop-blur-sm border-r border-border/50 h-screen sticky top-0",
           className
@@ -231,11 +231,11 @@ export function Sidebar({ currentView, onViewChange, onNewNote, className }: Sid
       <AnimatePresence>
         {isMobileOpen && (
           <motion.aside
-            initial={{ x: -280 }}
+            initial={{ x: -240 }}
             animate={{ x: 0 }}
-            exit={{ x: -280 }}
+            exit={{ x: -240 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="lg:hidden fixed left-0 top-0 z-50 w-72 h-screen bg-background/95 backdrop-blur-sm border-r border-border/50"
+            className="lg:hidden fixed left-0 top-0 z-50 w-60 h-screen bg-background/95 backdrop-blur-sm border-r border-border/50"
           >
             <SidebarContent />
           </motion.aside>
