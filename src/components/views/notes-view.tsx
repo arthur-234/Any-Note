@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, Plus, SortAsc, SortDesc } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { NoteCard } from '@/components/notes/note-card';
 import { useAuth } from '@/hooks/useAuth';
-import { notesStorage } from '@/lib/storage';
+import { useNotesStore } from '@/store';
 import { Note } from '@/types/note';
 
 interface NotesViewProps {
@@ -20,88 +20,52 @@ interface NotesViewProps {
 
 export function NotesView({ onNewNote, onEditNote }: NotesViewProps) {
   const { user } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<'date' | 'title' | 'updated'>('updated');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const {
+    notes,
+    searchTerm,
+    selectedTags,
+    sortBy,
+    sortOrder,
+    isLoading,
+    loadNotes,
+    setSearchTerm,
+    toggleTag,
+    setSortBy,
+    setSortOrder,
+    deleteNote,
+    clearSelectedTags,
+    getFilteredNotes,
+    getAllTags,
+  } = useNotesStore();
 
-  const notes = useMemo(() => {
-    if (!user) return [];
-    return notesStorage.getUserNotes(user.id);
-  }, [user]);
-
-  const allTags = useMemo(() => {
-    const tags = new Set<string>();
-    notes.forEach(note => {
-      note.tags.forEach(tag => tags.add(tag));
-    });
-    return Array.from(tags).sort();
-  }, [notes]);
-
-  const filteredNotes = useMemo(() => {
-    let filtered = notes;
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(note =>
-        note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        note.content.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  // Load notes when user changes
+  useEffect(() => {
+    if (user) {
+      loadNotes(user.id);
     }
+  }, [user, loadNotes]);
 
-    // Filter by tags
-    if (selectedTags.length > 0) {
-      filtered = filtered.filter(note =>
-        selectedTags.every(tag => note.tags.includes(tag))
-      );
-    }
-
-    // Sort notes
-    filtered.sort((a, b) => {
-      let comparison = 0;
-      
-      switch (sortBy) {
-        case 'title':
-          comparison = a.title.localeCompare(b.title);
-          break;
-        case 'date':
-          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-          break;
-        case 'updated':
-          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
-          break;
-      }
-
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    return filtered;
-  }, [notes, searchTerm, selectedTags, sortBy, sortOrder]);
+  const filteredNotes = getFilteredNotes();
+  const allTags = getAllTags();
 
   const handleDeleteNote = (noteId: string) => {
     if (!user) return;
-    notesStorage.deleteNote(noteId);
-    // Force re-render by updating a state that triggers useMemo
-    setSearchTerm(prev => prev);
+    deleteNote(noteId);
   };
 
   const handleTagToggle = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
+    toggleTag(tag);
   };
 
   const clearFilters = () => {
     setSearchTerm('');
-    setSelectedTags([]);
+    clearSelectedTags();
     setSortBy('updated');
     setSortOrder('desc');
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

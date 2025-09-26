@@ -144,7 +144,7 @@ export default function Home() {
         />
         
         <main className="flex-1 lg:ml-[240px] flex flex-col">
-          <div className="p-2 pl-4 flex-1">
+          <div className="p-2 pl-3 flex-1">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentView}

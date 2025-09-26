@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, CheckSquare, Square, Calendar, Filter, Search, Trash2, Edit3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,15 +12,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/useAuth';
-import { tasksStorage, notesStorage } from '@/lib/storage';
+import { useTasksStore, useNotesStore } from '@/store';
 import { Task, TaskStatus } from '@/types/task';
 
 interface TasksViewProps {}
 
 export function TasksView({}: TasksViewProps) {
   const { user } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [newTask, setNewTask] = useState({
@@ -29,48 +27,34 @@ export function TasksView({}: TasksViewProps) {
     linkedNoteId: ''
   });
 
-  const tasks = useMemo(() => {
-    if (!user) return [];
-    return tasksStorage.getUserTasks(user.id);
-  }, [user]);
+  const {
+    tasks,
+    searchTerm,
+    statusFilter,
+    isLoading,
+    loadTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    toggleTaskCompletion,
+    setSearchTerm,
+    setStatusFilter,
+    getFilteredTasks,
+    getTaskStats,
+  } = useTasksStore();
 
-  const notes = useMemo(() => {
-    if (!user) return [];
-    return notesStorage.getUserNotes(user.id);
-  }, [user]);
+  const { notes, loadNotes } = useNotesStore();
 
-  const filteredTasks = useMemo(() => {
-    let filtered = tasks;
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(task =>
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        task.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  // Load tasks and notes when user changes
+  useEffect(() => {
+    if (user) {
+      loadTasks(user.id);
+      loadNotes(user.id);
     }
+  }, [user, loadTasks, loadNotes]);
 
-    // Filter by status
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(task => 
-        statusFilter === 'completed' ? task.completed : !task.completed
-      );
-    }
-
-    // Sort by creation date (newest first)
-    return filtered.sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }, [tasks, searchTerm, statusFilter]);
-
-  const taskStats = useMemo(() => {
-    const total = tasks.length;
-    const completed = tasks.filter(task => task.completed).length;
-    const pending = total - completed;
-    const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-    return { total, completed, pending, completionRate };
-  }, [tasks]);
+  const filteredTasks = getFilteredTasks();
+  const taskStats = getTaskStats();
 
   const handleCreateTask = () => {
     if (!user || !newTask.title.trim()) return;
@@ -85,11 +69,9 @@ export function TasksView({}: TasksViewProps) {
       updatedAt: new Date()
     };
 
-    tasksStorage.saveTask(task);
+    addTask(task);
     setNewTask({ title: '', description: '', linkedNoteId: '' });
     setIsCreateDialogOpen(false);
-    // Force re-render
-    setSearchTerm(prev => prev);
   };
 
   const handleUpdateTask = () => {
@@ -97,34 +79,19 @@ export function TasksView({}: TasksViewProps) {
 
     const updatedTask: Task = {
       ...editingTask,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date()
     };
 
-    tasksStorage.saveTask(updatedTask);
+    updateTask(updatedTask.id, updatedTask);
     setEditingTask(null);
-    // Force re-render
-    setSearchTerm(prev => prev);
   };
 
   const handleToggleTask = (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
-
-    const updatedTask: Task = {
-      ...task,
-      completed: !task.completed,
-      updatedAt: new Date().toISOString()
-    };
-
-    tasksStorage.saveTask(updatedTask);
-    // Force re-render
-    setSearchTerm(prev => prev);
+    toggleTaskCompletion(taskId);
   };
 
   const handleDeleteTask = (taskId: string) => {
-    tasksStorage.deleteTask(taskId);
-    // Force re-render
-    setSearchTerm(prev => prev);
+    deleteTask(taskId);
   };
 
   const getLinkedNote = (noteId?: string) => {
@@ -133,7 +100,7 @@ export function TasksView({}: TasksViewProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

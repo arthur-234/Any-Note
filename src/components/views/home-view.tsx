@@ -1,13 +1,13 @@
 'use client';
 
+import { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, CheckSquare, Clock, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { notesStorage, tasksStorage } from '@/lib/storage';
-import { useMemo } from 'react';
+import { useNotesStore, useTasksStore } from '@/store';
 
 interface HomeViewProps {
   onViewChange: (view: string) => void;
@@ -16,24 +16,32 @@ interface HomeViewProps {
 
 export function HomeView({ onViewChange, onNewNote }: HomeViewProps) {
   const { user } = useAuth();
+  const { notes, loadNotes } = useNotesStore();
+  const { tasks, loadTasks, getTaskStats } = useTasksStore();
+
+  // Load data when user changes
+  useEffect(() => {
+    if (user) {
+      loadNotes(user.id);
+      loadTasks(user.id);
+    }
+  }, [user, loadNotes, loadTasks]);
 
   const stats = useMemo(() => {
     if (!user) return { totalNotes: 0, totalTasks: 0, completedTasks: 0, recentNotes: [] };
 
-    const userNotes = notesStorage.getUserNotes(user.id);
-    const userTasks = tasksStorage.getUserTasks(user.id);
-    const completedTasks = userTasks.filter(task => task.completed).length;
-    const recentNotes = userNotes
+    const taskStats = getTaskStats();
+    const recentNotes = notes
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       .slice(0, 3);
 
     return {
-      totalNotes: userNotes.length,
-      totalTasks: userTasks.length,
-      completedTasks,
+      totalNotes: notes.length,
+      totalTasks: tasks.length,
+      completedTasks: taskStats.completed,
       recentNotes
     };
-  }, [user]);
+  }, [user, notes, tasks, getTaskStats]);
 
   const quickActions = [
     {
@@ -60,7 +68,7 @@ export function HomeView({ onViewChange, onNewNote }: HomeViewProps) {
   ];
 
   return (
-    <div className="space-y-6 h-full flex flex-col">
+    <div className="space-y-4 h-full flex flex-col">
       {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

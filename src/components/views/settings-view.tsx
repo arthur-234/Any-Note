@@ -118,7 +118,7 @@ export function SettingsView({}: SettingsViewProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -262,7 +262,7 @@ export function SettingsView({}: SettingsViewProps) {
               Exporte, importe ou exclua seus dados
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">

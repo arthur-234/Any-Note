@@ -113,7 +113,7 @@ export function ProfileView({}: ProfileViewProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
