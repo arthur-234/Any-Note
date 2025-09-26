@@ -27,12 +27,38 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
   const { login, register, recoverByToken } = useAuth();
 
+  const validatePassword = (password: string): string | null => {
+    if (password.length < 8) {
+      return 'A senha deve ter pelo menos 8 caracteres';
+    }
+    if (!/(?=.*[a-z])/.test(password)) {
+      return 'A senha deve conter pelo menos uma letra minúscula';
+    }
+    if (!/(?=.*[A-Z])/.test(password)) {
+      return 'A senha deve conter pelo menos uma letra maiúscula';
+    }
+    if (!/(?=.*\d)/.test(password)) {
+      return 'A senha deve conter pelo menos um número';
+    }
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
     try {
+      // Validar senha forte apenas no registro
+      if (isRegistering) {
+        const passwordError = validatePassword(credentials.password);
+        if (passwordError) {
+          setError(passwordError);
+          setIsLoading(false);
+          return;
+        }
+      }
+
       const result = isRegistering 
         ? await register(credentials)
         : await login(credentials);
@@ -266,13 +292,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               </div>
             </form>
 
-            {!isRegistering && (
-              <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border/50">
-                <p className="text-xs text-muted-foreground text-center">
-                  <strong>Usuário padrão:</strong> admin / admin123
-                </p>
-              </div>
-            )}
+
           </CardContent>
         </Card>
       </motion.div>

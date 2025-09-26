@@ -17,12 +17,6 @@ export function useAuth() {
       setIsAuthenticated(true);
     }
     
-    // Criar usuário padrão se não existir nenhum
-    const users = userStorage.getUsers();
-    if (users.length === 0) {
-      userStorage.createDefaultUser();
-    }
-    
     setIsLoading(false);
   }, []);
 

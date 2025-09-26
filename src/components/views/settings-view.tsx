@@ -166,7 +166,7 @@ export function SettingsView({}: SettingsViewProps) {
                   <Label className="text-sm font-medium">Token de recuperação</Label>
                   <div className="flex items-center gap-2 mt-1">
                     <code className="text-xs bg-muted px-2 py-1 rounded font-mono">
-                      {user?.recoveryToken}
+                      {user?.token}
                     </code>
                     <Badge variant="secondary" className="text-xs">
                       Guarde este token para recuperação

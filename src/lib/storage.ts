@@ -67,20 +67,7 @@ export const userStorage = {
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
   },
 
-  // Criar usuário padrão (para desenvolvimento)
-  createDefaultUser(): User {
-    const defaultUser: User = {
-      id: '1',
-      username: 'admin',
-      password: 'admin123',
-      token: this.generateToken(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    
-    this.saveUser(defaultUser);
-    return defaultUser;
-  }
+
 };
 
 // Funções para notas (com filtro por usuário)
