@@ -7,6 +7,7 @@ export interface Note {
   tags: string[];
   isPinned: boolean;
   color?: string;
+  userId: string;
 }
 
 export interface NoteFormData {
