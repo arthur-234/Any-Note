@@ -114,13 +114,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
   if (showRecovery) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="w-full max-w-md backdrop-blur-sm bg-background/95 border-border/50 shadow-2xl">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="w-full max-w-md backdrop-blur-sm bg-background/95 border-border/50 shadow-2xl">
             <CardHeader className="text-center space-y-2">
               <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                 <Key className="w-6 h-6 text-primary" />
@@ -175,18 +174,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             </CardContent>
           </Card>
         </motion.div>
-      </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Card className="w-full max-w-md backdrop-blur-sm bg-background/95 border-border/50 shadow-2xl">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="w-full max-w-md backdrop-blur-sm bg-background/95 border-border/50 shadow-2xl">
           <CardHeader className="text-center space-y-2">
             <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
               {isRegistering ? (
@@ -296,6 +293,5 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
   );
 }

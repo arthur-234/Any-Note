@@ -34,6 +34,9 @@ export const useAuthStore = create<AuthStore>()(
 
       // Actions
       initializeAuth: () => {
+        // Inicializar usuário admin padrão se não existir
+        userStorage.initializeDefaultUser();
+        
         const currentUser = userStorage.getCurrentUser();
         set({
           user: currentUser,

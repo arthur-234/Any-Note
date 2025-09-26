@@ -67,7 +67,24 @@ export const userStorage = {
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
   },
 
-
+  // Inicializar usuário admin padrão
+  initializeDefaultUser(): void {
+    if (typeof window === 'undefined') return;
+    
+    const adminUser = this.findByUsername('admin');
+    if (!adminUser) {
+      const defaultAdmin: User = {
+        id: 'admin-default',
+        username: 'admin',
+        password: 'admin123',
+        token: this.generateToken(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      
+      this.saveUser(defaultAdmin);
+    }
+  },
 };
 
 // Funções para notas (com filtro por usuário)
