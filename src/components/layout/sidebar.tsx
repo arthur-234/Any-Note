@@ -141,7 +141,7 @@ export function Sidebar({ currentView, onViewChange, onNewNote, className }: Sid
       )}
 
       {/* Navigation Items */}
-      <nav className="flex-1 p-2 space-y-1">
+      <nav className="flex-1 p-2 pr-1 space-y-1">
         {sidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;
